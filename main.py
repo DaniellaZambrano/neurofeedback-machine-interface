@@ -9,29 +9,27 @@ neuropy = NeuroPy.NeuroPy()
 
 timestamps = []
 attention_values = []
-meditation_values = []
 theta_values = []
 alpha_values = []
-delta_values = []
+beta_values = []
 
 def signal_callback(value):
     current_time = datetime.now().strftime("%H:%M:%S.%f") 
     attention = neuropy.attention
-    meditation = neuropy.meditation
+
     # Cambiar si hay una propiedad específica que no sea rawValue
     theta = neuropy.rawValue  
-    alpha = neuropy.rawValue  
-    delta = neuropy.rawValue  
+    alpha = neuropy.lowAlpha 
+    beta = neuropy.lowBeta
 
     # Se guardan los valores
     timestamps.append(current_time)
     attention_values.append(attention)
-    meditation_values.append(meditation)
     theta_values.append(theta)
     alpha_values.append(alpha)
-    delta_values.append(delta)
+    beta_values.append(beta)
 
-    print(f"Time: {current_time}, Attention: {attention}, Meditation: {meditation}, Theta: {theta}, Alpha: {alpha}, Delta: {delta}")
+    print(f"Time: {current_time}, Attention: {attention}, Theta: {theta}, Alpha: {alpha}, Beta: {beta}")
 
 
 # Se puede usar cualquier otra señal
@@ -47,28 +45,28 @@ finally:
     neuropy.stop()
 
 # Guardar los datos en un archivo CSV
-with open("neurodata.csv", "w", newline="") as file:
+with open("../Tests/neurodata.csv", "w", newline="") as file:
     writer = csv.writer(file)
-    writer.writerow(["Timestamp", "Attention", "Meditation", "Theta", "Alpha", "Delta"])
+    writer.writerow(["Timestamp", "Attention", "Theta", "Alpha", "Beta"])
     for i in range(len(timestamps)):
-        writer.writerow([timestamps[i], attention_values[i], meditation_values[i], theta_values[i], alpha_values[i], delta_values[i]])
+        writer.writerow([timestamps[i], attention_values[i], theta_values[i], alpha_values[i], beta_values[i]])
 
 print("Datos guardados en 'neurodata.csv'.")
 
 # Graficar los datos
 plt.figure(figsize=(10, 8))
 
-# Graficar atención
+# Graficar alpha
 plt.subplot(3, 1, 1)
-plt.plot(timestamps, attention_values, label="Attention", color='blue')
-plt.ylabel("Attention")
+plt.plot(timestamps, alpha_values, label="Alpha", color='blue')
+plt.ylabel("Alpha")
 plt.legend()
 plt.xticks(rotation=45)
 
-# Graficar meditación
+# Graficar beta
 plt.subplot(3, 1, 2)
-plt.plot(timestamps, meditation_values, label="Meditation", color='green')
-plt.ylabel("Meditation")
+plt.plot(timestamps, beta_values, label="Beta", color='green')
+plt.ylabel("Beta")
 plt.legend()
 plt.xticks(rotation=45)
 
